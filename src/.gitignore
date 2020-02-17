@@ -10,6 +10,9 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
+/db/mysql_data
+/db/mysql_conf
+/db/mysql_init
 
 # Ignore all logfiles and tempfiles.
 /log/*
