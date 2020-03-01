@@ -88,15 +88,18 @@ ActiveRecord::Schema.define(version: 2020_02_18_092351) do
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "email"
-    t.string "password_digest"
+    t.string "email", null: false
+    t.string "password_digest", null: false
     t.string "remember_digest"
     t.string "activation_digest"
     t.datetime "activated_at"
     t.boolean "activated", default: false
     t.boolean "status", default: true
+    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["token"], name: "index_users_on_token", unique: true
   end
 
   add_foreign_key "authorizations", "users"

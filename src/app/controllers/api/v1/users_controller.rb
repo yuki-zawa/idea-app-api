@@ -1,6 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
+      skip_before_action :authenticate!, only: [:create, :sign_in]
 
       def index
         if !(params[:page] && params[:limit])
@@ -21,7 +22,23 @@ module Api
       end
 
       def create
+        @user = User.new(email: params[:email], password: params[:password])
 
+        if @user.save
+          render json: @user
+        else
+          render json: { errors: @user.errors.full_messages }, status: 400
+        end
+      end
+
+      def sign_in
+        @user = User.find_by(email: params[:email])
+
+        if @user && @user.authenticate(params[:password])
+          render json: @user
+        else
+          render json: { errors: ['failed to login'] }, status: 401
+        end
       end
 
       def destroy
@@ -30,6 +47,10 @@ module Api
 
       def update
 
+      end
+
+      def me
+        render json: current_user
       end
 
       private
