@@ -1,3 +1,4 @@
 class IdeaTag < ApplicationRecord
-  belongs_to :idea
+  has_many :idea_idea_tags
+  has_many :ideas, :through => :idea_idea_tags
 end
