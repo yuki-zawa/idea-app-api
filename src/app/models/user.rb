@@ -18,6 +18,15 @@ class User < ApplicationRecord
                                                   BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
+  # SNS
+  def User.create_from_auth!(auth)
+    #authの情報を元にユーザー生成の処理を記述
+    #auth["credentials"]にアクセストークン、シークレットなどの情報が入ってます。
+    #auth["info"]["email"]にユーザーのメールアドレスが入ってます。
+    @user = User.new(email: auth["info"]["email"], password: "google-oauth2", password_confirmation: "google-oauth2", activated: true, activated_at: Time.zone.now, token: auth["credentials"]["token"])
+    @user.save!
+    @user
+  end
 
   # token check
   def authenticated?(attribute, token)

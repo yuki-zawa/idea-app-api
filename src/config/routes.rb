@@ -16,4 +16,9 @@ Rails.application.routes.draw do
       resources :idea_tags, only: [:index, :create, :update, :destroy, :show]
     end
   end
+  scope module: :api do
+    scope module: :v1 do
+      match '/auth/:provider/callback', to: 'account_activations#create', via: [:get, :post]
+    end
+  end
 end
