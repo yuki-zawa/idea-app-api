@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 (1..10).each do |num|
-  User.create!(email: "user-email#{num}", password_digest: "password_digest#{num}",
+  User.create!(email: "user#{num}@gmail.com", password: "password", password_confirmation: "password",
               remember_digest: "remember_digest#{num}", activation_digest: "activation_digest#{num}",
               activated_at: "activated_at#{num}", activated: "activated#{num}")
   Authorization.create!(user_id: num, uid: "uid#{num}", provider: "provider#{num}")

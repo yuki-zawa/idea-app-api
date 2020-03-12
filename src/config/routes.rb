@@ -8,11 +8,17 @@ Rails.application.routes.draw do
           get 'me' # debug
         end
       end
+      resources :account_activations, only: [:edit]
       resources :authorizations, only: [:index, :create, :update, :destroy, :show]
       resources :ideas, only: [:index, :create, :update, :destroy, :show]
       resources :multi_ideas, only: [:index, :create, :update, :destroy, :show]
       resources :genre_tags, only: [:index, :create, :update, :destroy, :show]
       resources :idea_tags, only: [:index, :create, :update, :destroy, :show]
+    end
+  end
+  scope module: :api do
+    scope module: :v1 do
+      match '/auth/:provider/callback', to: 'account_activations#create', via: [:get, :post]
     end
   end
 end

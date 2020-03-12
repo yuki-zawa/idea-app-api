@@ -9,7 +9,7 @@ module Api
           return
         end
 
-        # pagination
+        # pagination 
         page = params[:page] ? params[:page].to_i : 1
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
@@ -25,7 +25,12 @@ module Api
         @user = User.new(email: params[:email], password: params[:password])
 
         if @user.save
-          render json: @user
+          begin
+            raise @user.send_activation_email
+          rescue
+            puts "failed sending mail"
+          end
+          render json: { messages: "Please check your email to activate your account." }
         else
           render json: { errors: @user.errors.full_messages }, status: 400
         end
