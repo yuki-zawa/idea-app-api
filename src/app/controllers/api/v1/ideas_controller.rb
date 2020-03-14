@@ -13,7 +13,7 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        render :json => Idea.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data"
+        render :json => current_user.ideas.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data"
       end
 
       def show

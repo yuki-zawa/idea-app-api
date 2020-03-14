@@ -51,7 +51,7 @@ module Api
       end
 
       def me
-        render json: current_user
+        render json: current_user, :serializer => UserSerializer
       end
 
       private
