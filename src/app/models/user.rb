@@ -21,11 +21,14 @@ class User < ApplicationRecord
   # SNS
   def User.create_from_auth!(auth)
     #authの情報を元にユーザー生成の処理を記述
-    #auth["credentials"]にアクセストークン、シークレットなどの情報が入ってます。
-    #auth["info"]["email"]にユーザーのメールアドレスが入ってます。
+    #auth["credentials"]にアクセストークン、シークレットなどの情報
+    #auth["info"]["email"]にユーザーのメールアドレス
     @user = User.new(email: auth["info"]["email"], password: "google-oauth2", password_confirmation: "google-oauth2", activated: true, activated_at: Time.zone.now, token: auth["credentials"]["token"])
-    @user.save!
-    @user
+    if @user.save
+      @user
+    else
+      render status: 400, :json => { status: "400", message: "this mail address has already existed" }
+    end
   end
 
   # token check
