@@ -13,7 +13,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        render :json => current_user.ideas.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data"
+        total = current_user.ideas.where(status: true).count
+
+        render :json => current_user.ideas.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
