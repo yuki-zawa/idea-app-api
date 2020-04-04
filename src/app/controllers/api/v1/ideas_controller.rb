@@ -58,7 +58,7 @@ module Api
           .permit(
             :idea => [:icon, :user_id, :title, :detail, :priority],
             :idea_tags => [:id],
-            :genre_tags => [:id],
+            :genre_tag => [:id],
           )
         end
 
@@ -71,8 +71,8 @@ module Api
               idea_tags.push idea_tag
             end
           end
-          if idea_params[:genre_tags]
-            genre_tags.push GenreTag.find(idea_params[:genre_tags][:id])
+          if idea_params[:genre_tag]
+            genre_tags.push GenreTag.find(idea_params[:genre_tag][:id])
           end
   
           idea.idea_tags = idea_tags
