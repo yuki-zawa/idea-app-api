@@ -23,7 +23,9 @@ module Api
       end
 
       def create
-        idea = Idea.new(idea_params)
+        idea = Idea.new(idea_params[:idea])
+        tag_update(idea, idea_params)
+
         if idea.save
           render :json => idea, :serializer => IdeaSerializer
         else
@@ -42,7 +44,8 @@ module Api
 
       def update
         idea = Idea.find(params[:id])
-        if idea.update(idea_params)
+        tag_update(idea, idea_params)
+        if idea.update(idea_params[:idea])
           render :json => idea, :serializer => IdeaSerializer
         else
           render status: 400, :json => { status: "400", message: "validate error" }
@@ -51,7 +54,29 @@ module Api
 
       private
         def idea_params
-          params.require(:idea).permit(:user_id, :title, :detail, :priority)
+          params
+          .permit(
+            :idea => [:icon, :user_id, :title, :detail, :priority],
+            :idea_tags => [:id],
+            :genre_tags => [:id],
+          )
+        end
+
+        def tag_update idea, idea_params = []
+          idea_tags = []
+          genre_tags = []
+          if idea_params[:idea_tags]
+            idea_params[:idea_tags].each do |idea_tag_param|
+              idea_tag = IdeaTag.find(idea_tag_param[:id])
+              idea_tags.push idea_tag
+            end
+          end
+          if idea_params[:genre_tags]
+            genre_tags.push GenreTag.find(idea_params[:genre_tags][:id])
+          end
+  
+          idea.idea_tags = idea_tags
+          idea.genre_tags = genre_tags
         end
     end
   end
