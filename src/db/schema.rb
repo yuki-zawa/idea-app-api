@@ -24,11 +24,13 @@ ActiveRecord::Schema.define(version: 2020_02_18_092351) do
   end
 
   create_table "genre_tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "name"
     t.string "color"
     t.boolean "status", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_genre_tags_on_user_id"
   end
 
   create_table "idea_genre_tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -59,10 +61,12 @@ ActiveRecord::Schema.define(version: 2020_02_18_092351) do
   end
 
   create_table "idea_tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "name"
     t.boolean "status", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_idea_tags_on_user_id"
   end
 
   create_table "ideas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -103,11 +107,13 @@ ActiveRecord::Schema.define(version: 2020_02_18_092351) do
   end
 
   add_foreign_key "authorizations", "users"
+  add_foreign_key "genre_tags", "users"
   add_foreign_key "idea_genre_tags", "genre_tags"
   add_foreign_key "idea_genre_tags", "ideas"
   add_foreign_key "idea_idea_tags", "idea_tags"
   add_foreign_key "idea_idea_tags", "ideas"
   add_foreign_key "idea_multi_ideas", "ideas"
   add_foreign_key "idea_multi_ideas", "multi_ideas"
+  add_foreign_key "idea_tags", "users"
   add_foreign_key "ideas", "users"
 end

@@ -13,9 +13,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        total = IdeaTag.where(status: true).select{|e| e.ideas.select{|idea| idea.user.id == current_user.id}.present?}.count
+        total = IdeaTag.where(status: true).where(user_id: current_user.id).count
 
-        render :json => IdeaTag.where(status: true).limit(limit).offset(offset).select{|e| e.ideas.select{|idea| idea.user.id == current_user.id}.present?}, adapter: :json, :each_serializer => IdeaTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
+        render :json => IdeaTag.where(status: true).where(user_id: current_user.id).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
@@ -24,6 +24,7 @@ module Api
 
       def create
         ideaTag = IdeaTag.new(idea_tag_params)
+        ideaTag.user_id = current_user.id
         if ideaTag.save
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else

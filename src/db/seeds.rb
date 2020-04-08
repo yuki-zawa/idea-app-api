@@ -8,7 +8,7 @@
 (1..10).each do |num|
   User.create!(email: "user#{num}@gmail.com", password: "password", password_confirmation: "password",
               remember_digest: "remember_digest#{num}", activation_digest: "activation_digest#{num}",
-              activated_at: "activated_at#{num}", activated: "activated#{num}")
+              activated_at: "activated_at#{num}", activated: true)
   Authorization.create!(user_id: num, uid: "uid#{num}", provider: "provider#{num}")
 end
 
@@ -22,8 +22,8 @@ end
 end
 
 (1..30).each do |num|
-  GenreTag.create!(name:"genre_tag#{num}", color:"#ffffff")
-  IdeaTag.create!(name:"idea_tag#{num}")
+  GenreTag.create!(name:"genre_tag#{num}", color:"#8affca", user_id: 1)
+  IdeaTag.create!(name:"idea_tag#{num}", user_id: 1)
 end
 
 (1..20).each do |num|

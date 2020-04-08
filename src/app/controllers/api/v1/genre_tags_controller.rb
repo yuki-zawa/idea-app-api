@@ -13,9 +13,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        total = GenreTag.where(status: true).select{|e| e.ideas.select{|idea| idea.user.id == current_user.id}.present?}.count
+        total = GenreTag.where(status: true).where(user_id: current_user.id).count
 
-        render :json => GenreTag.where(status: true).limit(limit).offset(offset).select{|e| e.ideas.select{|idea| idea.user.id == current_user.id}.present?}, adapter: :json, :each_serializer => GenreTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
+        render :json => GenreTag.where(status: true).where(user_id: current_user.id).limit(limit).offset(offset), adapter: :json, :each_serializer => GenreTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
@@ -24,6 +24,7 @@ module Api
 
       def create
         genreTag = GenreTag.new(genre_tag_params)
+        genreTag.user_id = current_user.id
         if genreTag.save
           render :json => genreTag, :serializer => GenreTagSerializer
         else
