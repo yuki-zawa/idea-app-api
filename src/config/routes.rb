@@ -10,7 +10,11 @@ Rails.application.routes.draw do
       end
       resources :account_activations, only: [:edit]
       resources :authorizations, only: [:index, :create, :update, :destroy, :show]
-      resources :ideas, only: [:index, :create, :update, :destroy, :show]
+      resources :ideas, only: [:index, :create, :update, :destroy, :show] do
+        collection do
+          get 'random'
+        end
+      end
       resources :multi_ideas, only: [:index, :create, :update, :destroy, :show]
       resources :genre_tags, only: [:index, :create, :update, :destroy, :show]
       resources :idea_tags, only: [:index, :create, :update, :destroy, :show]

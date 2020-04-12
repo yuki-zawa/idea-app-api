@@ -52,6 +52,10 @@ module Api
         end
       end
 
+      def random
+        render :json => current_user.ideas.where(status: true).sample(2), adapter: :json, :each_serializer => IdeaSerializer, root: "data"
+      end
+
       private
         def idea_params
           params
