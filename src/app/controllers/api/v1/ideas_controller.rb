@@ -24,6 +24,7 @@ module Api
 
       def create
         idea = Idea.new(idea_params[:idea])
+        idea.user_id = current_user.id
         tag_update(idea, idea_params)
 
         if idea.save
@@ -60,7 +61,7 @@ module Api
         def idea_params
           params
           .permit(
-            :idea => [:icon, :user_id, :title, :detail, :priority],
+            :idea => [:icon, :title, :detail, :priority],
             :idea_tags => [:id],
             :genre_tag => [:id],
           )
