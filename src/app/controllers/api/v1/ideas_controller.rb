@@ -4,8 +4,26 @@ module Api
 
       def index
         if !(params[:page] && params[:limit])
-          render status: 400, :json => { status: "400", message: "page and limit required" }
+          render status: 400, :json => { status: "400", message: "page and limit are required" }
           return
+        end
+
+        logger.debug params[:idea_tags]
+
+        @ideas = Idea.where(status: true, user_id: current_user.id)
+
+        # idea_tagsの絞り込み
+        if params[:idea_tags]
+          matchAllIdeaTags = IdeaIdeaTag.where(idea_tag_id: params[:idea_tags]).group(:idea_id).select(:idea_id).having('count(idea_tag_id) >= ?', params[:idea_tags].length)
+          ideaIds = matchAllIdeaTags.map(&:idea_id)
+          @ideas = @ideas.where(id: ideaIds)
+        end
+
+        # genre_tagsの絞り込み
+        if params[:genre_tags]
+          matchAllGenreTags = IdeaGenreTag.where(genre_tag_id: params[:genre_tags]).group(:idea_id).select(:idea_id).having('count(genre_tag_id) >= ?', params[:genre_tags].length)
+          ideaIds = matchAllGenreTags.map(&:idea_id)
+          @ideas = @ideas.where(id: ideaIds)
         end
 
         # pagination
@@ -13,9 +31,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        total = current_user.ideas.where(status: true).count
+        total = @ideas.count
 
-        render :json => current_user.ideas.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
+        render :json => @ideas.limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
