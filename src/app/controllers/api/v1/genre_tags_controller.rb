@@ -28,7 +28,7 @@ module Api
         if genreTag.save
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end }
         end
       end
 
@@ -37,7 +37,7 @@ module Api
         if genreTag.update(status: false)
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end }
         end
       end
 
@@ -46,7 +46,7 @@ module Api
         if genreTag.update(genre_tag_params)
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end}
         end
       end
 

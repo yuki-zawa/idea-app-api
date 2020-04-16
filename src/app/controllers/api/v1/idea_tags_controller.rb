@@ -28,7 +28,7 @@ module Api
         if ideaTag.save
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 
@@ -37,7 +37,7 @@ module Api
         if ideaTag.update(status: false)
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 
@@ -46,7 +46,7 @@ module Api
         if ideaTag.update(idea_tag_params)
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 
