@@ -13,7 +13,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        render :json => IdeaTag.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaTagSerializer, root: "data"
+        total = IdeaTag.where(status: true).where(user_id: current_user.id).count
+
+        render :json => IdeaTag.where(status: true).where(user_id: current_user.id).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
@@ -22,10 +24,11 @@ module Api
 
       def create
         ideaTag = IdeaTag.new(idea_tag_params)
+        ideaTag.user_id = current_user.id
         if ideaTag.save
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 
@@ -34,7 +37,7 @@ module Api
         if ideaTag.update(status: false)
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 
@@ -43,7 +46,7 @@ module Api
         if ideaTag.update(idea_tag_params)
           render :json => ideaTag, :serializer => IdeaTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: ideaTag.errors.map do |index, message| message end }
         end
       end
 

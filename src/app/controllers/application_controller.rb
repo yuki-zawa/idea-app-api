@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
 
   def authenticate!
     authenticate_or_request_with_http_token do |token, options|
-      User.find_by(token: token).present?
+      (user = User.find_by(token: token)) && user.activated
     end
   end
 

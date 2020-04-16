@@ -13,7 +13,9 @@ module Api
         limit = params[:limit] ? params[:limit].to_i : 25
         offset = limit * (page - 1);
 
-        render :json => GenreTag.where(status: true).limit(limit).offset(offset), adapter: :json, :each_serializer => GenreTagSerializer, root: "data"
+        total = GenreTag.where(status: true).where(user_id: current_user.id).count
+
+        render :json => GenreTag.where(status: true).where(user_id: current_user.id).limit(limit).offset(offset), adapter: :json, :each_serializer => GenreTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
@@ -22,10 +24,11 @@ module Api
 
       def create
         genreTag = GenreTag.new(genre_tag_params)
+        genreTag.user_id = current_user.id
         if genreTag.save
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end }
         end
       end
 
@@ -34,7 +37,7 @@ module Api
         if genreTag.update(status: false)
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end }
         end
       end
 
@@ -43,7 +46,7 @@ module Api
         if genreTag.update(genre_tag_params)
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: "validate error" }
+          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end}
         end
       end
 
