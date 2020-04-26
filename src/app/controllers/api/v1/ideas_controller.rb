@@ -12,14 +12,14 @@ module Api
 
         # idea_tagsの絞り込み
         if params[:idea_tags]
-          matchAllIdeaTags = IdeaIdeaTag.where(idea_tag_id: params[:idea_tags]).group(:idea_id).select(:idea_id)
+          matchAllIdeaTags = IdeaIdeaTag.where(idea_tag_id: params[:idea_tags].split(",")).group(:idea_id).select(:idea_id).having('count(idea_id) >= ?', params[:idea_tags].split(",").length)
           ideaIds = matchAllIdeaTags.map(&:idea_id)
           @ideas = @ideas.where(id: ideaIds)
         end
 
         # genre_tagsの絞り込み
         if params[:genre_tags]
-          matchAllGenreTags = IdeaGenreTag.where(genre_tag_id: params[:genre_tags]).group(:idea_id).select(:idea_id)
+          matchAllGenreTags = IdeaGenreTag.where(genre_tag_id: params[:genre_tags].split(",")[0]).group(:idea_id).select(:idea_id).having('count(idea_id) = ?', 1)
           ideaIds = matchAllGenreTags.map(&:idea_id)
           @ideas = @ideas.where(id: ideaIds)
         end
