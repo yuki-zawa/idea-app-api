@@ -13,11 +13,7 @@ module Api
         # idea_tagsの絞り込み
         if params[:idea_tags]
           matchAllIdeaTags = IdeaIdeaTag.where(idea_tag_id: params[:idea_tags]).group(:idea_id).select(:idea_id)
-          matchAllIdeaTags.each do |tag|
-            logger.debug tag.id
-          end
           ideaIds = matchAllIdeaTags.map(&:idea_id)
-          logger.debug ideaIds
           @ideas = @ideas.where(id: ideaIds)
         end
 
