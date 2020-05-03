@@ -66,6 +66,7 @@ module Api
 
       def update
         idea = Idea.find(params[:id])
+        idea.user_id = current_user.id
         tag_update(idea, idea_params)
         if idea.update(idea_params[:idea])
           render :json => idea, :serializer => IdeaSerializer
