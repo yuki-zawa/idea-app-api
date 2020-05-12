@@ -12,13 +12,8 @@
   Authorization.create!(user_id: num, uid: "uid#{num}", provider: "provider#{num}")
 end
 
-(1..10).each do |num|
-  MultiIdea.create!(icon: "😄", title: "title#{num}", detail: "detail#{num}", priority: 2.1+num/20)
-end
-
 (1..20).each do |num|
   Idea.create!(icon: "😄", user_id: (num+1)/2, title: "title#{num}", detail: "detail#{num}", priority: 2.1+num/20)
-  IdeaMultiIdea.create!(idea_id: num, multi_idea_id: (num+1)/2)
 end
 
 (1..30).each do |num|
