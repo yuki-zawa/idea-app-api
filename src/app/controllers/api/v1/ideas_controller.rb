@@ -49,6 +49,14 @@ module Api
         tag_update(idea, idea_params)
 
         if idea.save
+           # 複合アイデア用
+          if idea_params[:ideas]
+            ids = idea_params[:ideas]
+            ids.each do |id|
+              temp = Idea.find(id["id"])
+              idea.includeIdeas(temp)
+            end
+          end
           render :json => idea, :serializer => IdeaSerializer
         else
           render status: 400, :json => { status: "400", message: "validate error" }
@@ -69,6 +77,14 @@ module Api
         idea.user_id = current_user.id
         tag_update(idea, idea_params)
         if idea.update(idea_params[:idea])
+          # 複合アイデア用
+          if idea_params[:ideas]
+            ids = idea_params[:ideas]
+            ids.each do |id|
+              temp = Idea.find(id["id"])
+              idea.includeIdeas(temp)
+            end
+          end
           render :json => idea, :serializer => IdeaSerializer
         else
           render status: 400, :json => { status: "400", message: "validate error" }
@@ -86,6 +102,7 @@ module Api
             :idea => [:icon, :title, :detail, :priority],
             :idea_tags => [:id],
             :genre_tag => [:id],
+            :ideas => [:id],
           )
         end
 
