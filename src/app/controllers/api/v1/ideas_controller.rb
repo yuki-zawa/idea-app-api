@@ -10,6 +10,20 @@ module Api
 
         @ideas = Idea.where(status: true, user_id: current_user.id)
 
+        # sort機能
+        if params["sort"]
+          case params["sort"]
+            when "new" then
+              @ideas = @ideas.order(created_at: :desc)
+            when "old" then
+              @ideas = @ideas.order(:created_at)
+            when "high" then
+              @ideas = @ideas.order(priority: :desc)
+            when "low" then
+              @ideas = @ideas.order(:priority)
+            end
+        end
+
         # word検索
         if params[:word]
           @ideas = @ideas.where("title LIKE ? OR detail LIKE ?", "%#{params[:word]}%", "%#{params[:word]}%")
