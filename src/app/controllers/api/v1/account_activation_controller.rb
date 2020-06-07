@@ -2,12 +2,15 @@ module Api
   module V1
     class AccountActivationsController < ApplicationController
       skip_before_action :authenticate!, only: [:edit, :create]
+      include ActionController::Cookies
       def edit
         user = User.find_by(email: params[:email])
         if user && !user.activated? && user.authenticated?(:activation, params[:id])
           user.activate
           # ここの2つのrender redirectにした方が良い？クライアント側でログイン状態にしたい
-          render :json => user, :serializer => UserSerializer
+          cookies['token'] = {value: user.token, domain: 'stockroom.work'}
+          redirect_to 'https://stockroom.work/home'
+          # render :json => user, :serializer => UserSerializer
         else
           render status: 400, :json => { status: "400", errors: "invalid activation link" }
         end
@@ -20,7 +23,10 @@ module Api
             @auth = Authorization.create_from_auth(auth)
           end
           user = @auth.user
-          render :json => user, :serializer => UserSerializer
+          #ここでtokenをcookiesにセット
+          cookies['token'] = {value: user.token, domain: 'stockroom.work'}
+          redirect_to 'https://stockroom.work/home'
+          # render :json => user, :serializer => UserSerializer
         end
       end
     end

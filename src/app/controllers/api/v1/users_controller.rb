@@ -43,7 +43,12 @@ module Api
       end
 
       def destroy
-
+        user = User.find(params[:id])
+        if user.destroy
+          redirect_to 'https://stockroom.work'
+        else
+          render status: 400, :json => { status: "400", message: "failed" }
+        end
       end
 
       def update
