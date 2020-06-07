@@ -22,7 +22,7 @@ module Api
       end
 
       def create
-        @user = User.new(email: params[:email], password: params[:password])
+        @user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
 
         if @user.save
           @user.send_activation_email
