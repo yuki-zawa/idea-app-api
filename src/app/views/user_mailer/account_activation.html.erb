@@ -1,9 +1,13 @@
-<h1>Sample App</h1>
+STOCKROOMに登録していただきありがとうございます！<br/>
+<br/>
+利用を始める前に、まずは本人確認が必要です。<br/>
+以下のリンクをクリックしてメールアドレスを認証してください。<br/>
+<%= link_to "アカウント有効化", edit_api_v1_account_activation_url(@user.activation_token, email: @user.email) %>
+<br/>
+<br/>
+【STOCKROOMの使い方】<br/>
+<br/>
+STOCKROOMはあなたのひらめきをストック・活用できるメモアプリです。ホーム画面に追加していただくことでアプリの様にお使いいただけます。<br/>
 
-<p>Hi <%= @user.email %>,</p>
-
-<p>
-Welcome to the Sample App! Click on the link below to activate your account:
-</p>
-
-<%= link_to "Activate", edit_api_v1_account_activation_url(@user.activation_token, email: @user.email) %>
+STOCKROOMについて、詳しくはこちらをご覧ください！<br/>
+https://stockroom.work/introduction<br/>

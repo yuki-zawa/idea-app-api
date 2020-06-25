@@ -1,7 +1,6 @@
 module Api
   module V1
     class IdeasController < ApplicationController
-
       def index
         if !(params[:page] && params[:limit])
           render status: 400, :json => { status: "400", message: "page and limit are required" }
@@ -129,7 +128,7 @@ module Api
               idea_tags.push idea_tag
             end
           end
-          if idea_params[:genre_tag][:id] != 0
+          if idea_params[:genre_tag] && idea_params[:genre_tag][:id] != 0
             genre_tags.push GenreTag.find(idea_params[:genre_tag][:id])
           end
   

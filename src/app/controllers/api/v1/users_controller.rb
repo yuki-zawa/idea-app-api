@@ -2,6 +2,7 @@ module Api
   module V1
     class UsersController < ApplicationController
       skip_before_action :authenticate!, only: [:create, :sign_in]
+      include ActionController::Cookies
 
       def index
         if !(params[:page] && params[:limit])
@@ -22,6 +23,10 @@ module Api
       end
 
       def create
+        @before_user = User.find_by(email: params[:email])
+        if @before_user && !@before_user.activated
+          @before_user.destroy
+        end
         @user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
 
         if @user.save
@@ -52,7 +57,12 @@ module Api
       end
 
       def update
-
+        begin
+          cookies['token'] = {value: "", domain: '.stockroom.work', expires: Time.at(0)}
+          render json: { messages: "ok" }
+        rescue => e
+          logger.error e 
+        end
       end
 
       def me

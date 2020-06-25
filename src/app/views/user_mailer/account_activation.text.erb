@@ -1,5 +1,13 @@
-Hi <%= @user.email %>,
+STOCKROOMに登録していただきありがとうございます！
 
-Welcome to the Sample App! Click on the link below to activate your account:
+利用を始める前に、まずは本人確認が必要です。
+以下のリンクをクリックしてメールアドレスを認証してください。
 
 <%= edit_api_v1_account_activation_url(@user.activation_token, email: @user.email) %>
+
+【STOCKROOMの使い方】
+
+STOCKROOMはあなたのひらめきをストック・活用できるメモアプリです。ホーム画面に追加していただくことでアプリの様にお使いいただけます。
+
+STOCKROOMについて、詳しくはこちらをご覧ください！
+https://stockroom.work/introduction
