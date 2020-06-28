@@ -10,7 +10,8 @@ module Api
           cookies['token'] = {value: user.token, domain: 'stockroom.work'}
           redirect_to 'https://stockroom.work/home'
         else
-          render status: 400, :json => { status: "400", errors: "invalid activation link" }
+          # render status: 400, :json => { status: "400", errors: "invalid activation link" }
+          redirect_to 'https://stockroom.work/invalid'
         end
       end
 
