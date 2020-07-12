@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       end
       resources :genre_tags, only: [:index, :create, :update, :destroy, :show]
       resources :idea_tags, only: [:index, :create, :update, :destroy, :show]
+      resources :password_resets, only: [:new, :create, :edit, :update]
     end
   end
   scope module: :api do
