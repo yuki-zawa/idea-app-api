@@ -5,9 +5,8 @@ class User < ApplicationRecord
   before_save { self.email = email.downcase }
   before_create :create_activation_digest
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-
-  has_many :authorizations
-  has_many :ideas
+  has_many :authorizations, dependent: :destroy
+  has_many :ideas, dependent: :destroy
   validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
 
   validates :password, presence: true, length: { minimum: 6 }

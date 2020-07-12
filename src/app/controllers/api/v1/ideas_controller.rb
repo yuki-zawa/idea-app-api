@@ -1,7 +1,6 @@
 module Api
   module V1
     class IdeasController < ApplicationController
-
       def index
         if !(params[:page] && params[:limit])
           render status: 400, :json => { status: "400", message: "page and limit are required" }
@@ -9,6 +8,20 @@ module Api
         end
 
         @ideas = Idea.where(status: true, user_id: current_user.id)
+
+        # sort機能
+        if params["sort"]
+          case params["sort"]
+            when "new" then
+              @ideas = @ideas.order(created_at: :desc)
+            when "old" then
+              @ideas = @ideas.order(:created_at)
+            when "high" then
+              @ideas = @ideas.order(priority: :desc)
+            when "low" then
+              @ideas = @ideas.order(:priority)
+            end
+        end
 
         # word検索
         if params[:word]
@@ -49,6 +62,14 @@ module Api
         tag_update(idea, idea_params)
 
         if idea.save
+           # 複合アイデア用
+          if idea_params[:ideas]
+            ids = idea_params[:ideas]
+            ids.each do |id|
+              temp = Idea.find(id["id"])
+              idea.includeIdeas(temp)
+            end
+          end
           render :json => idea, :serializer => IdeaSerializer
         else
           render status: 400, :json => { status: "400", message: "validate error" }
@@ -66,8 +87,17 @@ module Api
 
       def update
         idea = Idea.find(params[:id])
+        idea.user_id = current_user.id
         tag_update(idea, idea_params)
         if idea.update(idea_params[:idea])
+          # 複合アイデア用
+          if idea_params[:ideas]
+            ids = idea_params[:ideas]
+            ids.each do |id|
+              temp = Idea.find(id["id"])
+              idea.includeIdeas(temp)
+            end
+          end
           render :json => idea, :serializer => IdeaSerializer
         else
           render status: 400, :json => { status: "400", message: "validate error" }
@@ -85,6 +115,7 @@ module Api
             :idea => [:icon, :title, :detail, :priority],
             :idea_tags => [:id],
             :genre_tag => [:id],
+            :ideas => [:id],
           )
         end
 
@@ -97,7 +128,7 @@ module Api
               idea_tags.push idea_tag
             end
           end
-          if idea_params[:genre_tag]
+          if idea_params[:genre_tag] && idea_params[:genre_tag][:id] != 0
             genre_tags.push GenreTag.find(idea_params[:genre_tag][:id])
           end
   

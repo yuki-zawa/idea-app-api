@@ -15,7 +15,6 @@ Rails.application.routes.draw do
           get 'random'
         end
       end
-      resources :multi_ideas, only: [:index, :create, :update, :destroy, :show]
       resources :genre_tags, only: [:index, :create, :update, :destroy, :show]
       resources :idea_tags, only: [:index, :create, :update, :destroy, :show]
     end

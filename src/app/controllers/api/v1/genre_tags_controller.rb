@@ -15,7 +15,7 @@ module Api
 
         total = GenreTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").count
 
-        render :json => GenreTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").limit(limit).offset(offset), adapter: :json, :each_serializer => GenreTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
+        render :json => GenreTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").order(created_at: :desc).limit(limit).offset(offset), adapter: :json, :each_serializer => GenreTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
@@ -34,10 +34,10 @@ module Api
 
       def destroy
         genreTag = GenreTag.find(params[:id])
-        if genreTag.update(status: false)
+        if genreTag.destroy
           render :json => genreTag, :serializer => GenreTagSerializer
         else
-          render status: 400, :json => { status: "400", message: genreTag.errors.map do |index, message| message end }
+          render status: 400, :json => { status: "400", message: "failed" }
         end
       end
 

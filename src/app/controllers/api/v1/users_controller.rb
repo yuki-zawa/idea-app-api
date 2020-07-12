@@ -2,6 +2,7 @@ module Api
   module V1
     class UsersController < ApplicationController
       skip_before_action :authenticate!, only: [:create, :sign_in]
+      include ActionController::Cookies
 
       def index
         if !(params[:page] && params[:limit])
@@ -22,7 +23,11 @@ module Api
       end
 
       def create
-        @user = User.new(email: params[:email], password: params[:password])
+        @before_user = User.find_by(email: params[:email])
+        if @before_user && !@before_user.activated
+          @before_user.destroy
+        end
+        @user = User.new(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
 
         if @user.save
           @user.send_activation_email
@@ -43,11 +48,20 @@ module Api
       end
 
       def destroy
-
+        if current_user.destroy
+          redirect_to 'https://stockroom.work'
+        else
+          render status: 400, :json => { status: "400", message: "failed" }
+        end
       end
 
       def update
-
+        begin
+          cookies['token'] = {value: "", domain: '.stockroom.work', expires: Time.at(0)}
+          render json: { messages: "ok" }
+        rescue => e
+          logger.error e 
+        end
       end
 
       def me

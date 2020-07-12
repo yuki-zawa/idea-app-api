@@ -4,5 +4,5 @@ class IdeaSerializer < ActiveModel::Serializer
   has_one :user
   has_many :genre_tags, :through => :idea_genre_ideas, serializer: GenreTagSerializer
   has_many :idea_tags, :through => :idea_idea_ideas, serializer: IdeaTagSerializer
-  has_many :multi_ideas, :through => :idea_multi_ideas, serializer: MultiIdeaSerializer
+  has_many :followers, through: :passive_relationships, source: :follower, serializer: IdeaSerializer
 end
