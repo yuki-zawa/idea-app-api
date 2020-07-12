@@ -15,7 +15,7 @@ module Api
 
         total = IdeaTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").count
 
-        render :json => IdeaTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").order(updated_at: :desc).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
+        render :json => IdeaTag.where(status: true).where(user_id: current_user.id).where("name LIKE ?", "%#{params[:word]}%").order(created_at: :desc).limit(limit).offset(offset), adapter: :json, :each_serializer => IdeaTagSerializer, root: "data", meta: {total: total, perPage: limit, currentPage: page}
       end
 
       def show
