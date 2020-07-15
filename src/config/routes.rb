@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :update, :destroy, :show, :create] do
         collection do
           post 'sign_in'
+          put 'pass/change' => "users#pass_change"
           get 'me' # debug
         end
       end
