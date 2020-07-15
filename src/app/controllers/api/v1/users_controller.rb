@@ -68,6 +68,15 @@ module Api
         render json: current_user, :serializer => UserSerializer
       end
 
+      def pass_change
+        if current_user.authenticated?(:password, params[:password]) && params[:newPasswordConfirmation] && params[:newPassword] && (params[:newPasswordConfirmation] == params[:newPassword])
+          current_user.update_attributes(password: params[:newPassword], password_confirmation: params[:newPasswordConfirmation])
+          render json: current_user, :serializer => UserSerializer
+        else
+          render status: 400, :json => { status: "400", message: "failed" }
+        end
+      end
+
       private
 
     end
