@@ -49,6 +49,7 @@ module Api
 
       def destroy
         if current_user.destroy
+          cookies['token'] = {value: "", domain: '.stockroom.work', expires: Time.at(0)}
           redirect_to 'https://stockroom.work'
         else
           render status: 400, :json => { status: "400", message: "failed" }

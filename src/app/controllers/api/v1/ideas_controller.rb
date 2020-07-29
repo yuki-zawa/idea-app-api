@@ -128,7 +128,7 @@ module Api
               idea_tags.push idea_tag
             end
           end
-          if idea_params[:genre_tag] && idea_params[:genre_tag][:id] != 0
+          if idea_params[:genre_tag] && idea_params[:genre_tag][:id]
             genre_tags.push GenreTag.find(idea_params[:genre_tag][:id])
           end
   
