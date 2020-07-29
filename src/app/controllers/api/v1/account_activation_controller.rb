@@ -7,8 +7,9 @@ module Api
         user = User.find_by(email: params[:email])
         if user && !user.activated? && user.authenticated?(:activation, params[:id])
           user.activate
-          cookies['token'] = {value: user.token, domain: 'stockroom.work'}
-          redirect_to 'https://stockroom.work/home'
+          # httpsじゃないのでコメントアウト, HerokuでSSL認証すればいける
+          # cookies['token'] = {value: user.token, domain: 'stockroom.work'}
+          redirect_to 'https://stockroom.work/login'
         else
           # render status: 400, :json => { status: "400", errors: "invalid activation link" }
           redirect_to 'https://stockroom.work/invalid'
